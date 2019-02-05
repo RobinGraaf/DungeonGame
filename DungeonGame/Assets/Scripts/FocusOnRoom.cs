@@ -3,22 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FocusOnRoom : MonoBehaviour {
-    
-    private Transform mRoomToFocus;
 
-	// Use this for initialization
-	void Start () {
-        mRoomToFocus = GameObject.FindWithTag("Player").GetComponent<PlayerBehaviour>().GetCurrentRoom();
-        ChangeRoom();
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        Debug.Log(mRoomToFocus);
-    }
-
-    void ChangeRoom()
+    public void ChangeRoom(TDMap.Room room, float tileSize)
     {
-        this.transform.position = new Vector3(mRoomToFocus.position.x, 15, mRoomToFocus.position.z);
+        this.transform.position = new Vector3((room.center.x + 0.5f) * tileSize, 25, (room.center.y + 0.5f) * tileSize);
     }
 }

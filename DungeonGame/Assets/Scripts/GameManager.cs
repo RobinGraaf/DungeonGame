@@ -2,47 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     [SerializeField]
-    private GameObject roomPrefab, playerPrefab, spawnPointPrefab;
-    private GameObject spawnPoint;
+    GameObject playerPrefab;
 
-    private List<GameObject> rooms;
+    static GameObject s_playerPrefab;
+    static float tileSize;
 
-	// Use this for initialization
-	void Start () {
-        rooms = new List<GameObject>();
-
-        CreateNewRoom(0, 0, 0, 1, true);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    void CreateNewRoom(float x, float y, float z, int amountOfRooms, bool spawnroom)
+    // Use this for initialization
+    void Awake()
     {
-        for (int i = 0; i < amountOfRooms; i++) {
-            GameObject room = Instantiate(roomPrefab, new Vector3(x, y, z), Quaternion.identity);
-            rooms.Add(room);
-
-            if (spawnroom)
-            {
-                spawnPoint = Instantiate(spawnPointPrefab, Vector3.zero, Quaternion.identity, room.transform);
-            }
-        }
-        CreatePlayer();
+        SetPlayer(playerPrefab);
     }
 
-    void CreatePlayer()
+    // Update is called once per frame
+    void Update()
     {
-        Instantiate(playerPrefab, spawnPoint.transform.position, Quaternion.identity, spawnPoint.transform.parent);
+
     }
 
-    public List<GameObject> GetRooms()
+    public static void CreatePlayer(float tSize)
     {
-        return rooms;
+        SetTileSize(tSize);
+        GameObject player = Instantiate(s_playerPrefab, GameObject.FindWithTag("PlayerSpawnPoint").transform.position, Quaternion.identity);
+        Vector3 currentScale = player.transform.localScale;
+        player.transform.localScale = new Vector3(currentScale.x * tileSize, currentScale.y * tileSize, currentScale.z * tileSize);
+    }
+
+    public static float GetTileSize()
+    {
+        return tileSize;
+    }
+
+    private static void SetTileSize(float value)
+    {
+        tileSize = value;
+    }
+
+    private static void SetPlayer(GameObject prefab)
+    {
+        s_playerPrefab = prefab;
     }
 }
